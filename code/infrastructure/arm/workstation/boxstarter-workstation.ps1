@@ -156,7 +156,7 @@ try {
   # Taskbar icons
   ######################################################
   Write-Host "Adding Icons to the TaskBar"
-  Install-ChocolateyPinnedTaskBarItem "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe"
+  Install-ChocolateyPinnedTaskBarItem "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.exe"
   Install-ChocolateyPinnedTaskBarItem "%windir%\system32\WindowsPowerShell\v1.0\PowerShell_ISE.exe"
   Install-ChocolateyPinnedTaskBarItem "C:\Windows\explorer.exe"
   Install-ChocolateyPinnedTaskBarItem "%windir%\system32\cmd.exe"
