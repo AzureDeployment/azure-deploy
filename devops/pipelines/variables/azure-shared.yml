@@ -1,0 +1,13 @@
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  armTemplateRoot: '$(System.DefaultWorkingDirectory)\code\infrastructure\arm\templates'
+  armParameterTemplateRoot: '$(System.DefaultWorkingDirectory)\code\infrastructure\arm\templates\parameters'
+  azureSubscription: 'azure-devops-service-connection'
+  deploymentAdminName: 'patrick@gallucci.us'
+  smokeVariables: 'Quisitive'
+  deploy-build: true
+  deploy-development: false
+  deploy-production: false
+  deploy-smoke: true

@@ -1,0 +1,488 @@
+name: $(Build.DefinitionName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+- master
+
+pool:
+  vmImage: windows-2019
+
+variables:
+ - template: devops/pipelines/variables/azure-shared.yml
+
+stages:
+# -----------------------------------------------------------------------------
+# Stage 1 - Continuous Integration (CI)
+# -----------------------------------------------------------------------------
+- stage: build
+  condition: and(succeeded(), eq(variables['deploy-build'], true))
+  jobs:
+  - job: buildjob
+    displayName: 'build azure-deploy'
+    steps:
+    - template: devops/pipelines/step/arm-build.yml
+      parameters:
+        azureSubscription: '$(azureSubscription)'
+        solution: '$(solution)'
+        buildPlatform: '$(buildPlatform)'
+        buildConfiguration: '$(buildConfiguration)'
+
+# -----------------------------------------------------------------------------
+# Stage 2 - Continuous Testing (CT)
+# -----------------------------------------------------------------------------
+- stage: smoketest
+  condition: eq(variables['deploy-smoke'], true)
+  dependsOn: build
+  variables:
+  - template: devops/pipelines/variables/smoke-variables.yml
+  - template: devops/pipelines/variables/smoke-features.yml
+  jobs:
+  - job: smoketestjob
+    steps:
+    - template: devops/pipelines/step/arm-storage-account.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/storage-account.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/storage-account.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-storage-account-container.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/storage-account-container.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/storage-account-container.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+        storage-account-name: '$(storage-account-name)'
+    - template: devops/pipelines/step/arm-data-lake-store.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/data-lake-store.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/data-lake-store.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-sql-server.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/sql-server.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/sql-server.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-event-hub-namespace.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/event-hub-namespace.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/event-hub-namespace.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-servicebus-namespace.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/servicebus-namespace.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/servicebus-namespace.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-analysis-services.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/analysis-services.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/analysis-services.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-synapse-dw.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/synapse-dw.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/synapse-dw.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-synapse-analytics.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/synapse-analytics.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/synapse-analytics.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-stream-analytics-job.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/stream-analytics-job.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/stream-analytics-job.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-event-hub-hub.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/event-hub-hub.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/event-hub-hub.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-servicebus-topic.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/servicebus-topic.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/servicebus-topic.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-data-factory.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/data-factory.json'
+        armTemplateAlertFile: '$(armTemplateRoot)/data-factory-extensions.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/data-factory.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-logic-app.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/logic-app.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/logic-app.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-machine-learning.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/machine-learning.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/machine-learning.test.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+
+#    - template: devops/pipelines/step/arm-remove-resource-group.yml
+#      parameters:
+#        azureSubscription: '$(azureSubscription)'
+#        resourceGroup: '$(resource-group)'
+#        condition: always()
+
+# -----------------------------------------------------------------------------
+# Stage 2.1 - Continuous Testing (CT) - Cleanup
+# -----------------------------------------------------------------------------
+- stage: smoketestcleanup
+  condition: eq(variables['deploy-smoke'], true)
+  dependsOn: smoketest
+  variables:
+  - template: devops/pipelines/variables/smoke-variables.yml
+  - template: devops/pipelines/variables/smoke-features.yml
+  jobs:
+  - job: smoketestcleanupjob
+    steps:
+    - template: devops/pipelines/step/arm-remove-resource-group.yml
+      parameters:
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+
+# -----------------------------------------------------------------------------
+# Stage 3 - Continuous Delivery (CD)
+# -----------------------------------------------------------------------------
+- stage: development
+  condition: eq(variables['deploy-development'], true)
+  dependsOn: smoketest
+  variables:
+  - template: devops/pipelines/variables/development-variables.yml
+  - template: devops/pipelines/variables/development-features.yml
+  jobs:
+  - job: developmentjob
+    steps:
+    - template: devops/pipelines/step/arm-storage-account.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/storage-account.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/storage-account.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-storage-account-container.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/storage-account-container.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/storage-account-container.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+        storage-account-name: '$(storage-account-name)'
+    - template: devops/pipelines/step/arm-data-lake-store.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/data-lake-store.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/data-lake-store.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-sql-server.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/sql-server.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/sql-server.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-event-hub-namespace.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/event-hub-namespace.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/event-hub-namespace.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-servicebus-namespace.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/servicebus-namespace.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/servicebus-namespace.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-analysis-services.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/analysis-services.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/analysis-services.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-synapse-dw.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/synapse-dw.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/synapse-dw.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-synapse-dw-logic-apps.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/synapse-dw-logic-apps-dev.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/synapse-dw.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-synapse-analytics.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/synapse-analytics.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/synapse-analytics.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-stream-analytics-job.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/stream-analytics-job.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/stream-analytics-job.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-event-hub-hub.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/event-hub-hub.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/event-hub-hub.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-servicebus-topic.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/servicebus-topic.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/servicebus-topic.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-data-factory.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/data-factory.json'
+        armTemplateAlertFile: '$(armTemplateRoot)/data-factory-extensions.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/data-factory.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-sql-managed-instance.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/sql-managed-instance.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/sql-managed-instance.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-logic-app.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/logic-app.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/logic-app.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-machine-learning.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/machine-learning.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/machine-learning.dev.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(mlds-resource-group)'
+        ev: '$(ev)'
+
+
+# -----------------------------------------------------------------------------
+# Stage 4 - Continuous Release (CR)
+# -----------------------------------------------------------------------------
+- stage: production
+  condition: eq(variables['deploy-production'], true)
+  dependsOn: development
+  variables:
+  - template: devops/pipelines/variables/production-variables.yml
+  - template: devops/pipelines/variables/production-features.yml
+  jobs:
+  - job: productionjob
+    steps:
+    - template: devops/pipelines/step/arm-storage-account.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/storage-account.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/storage-account.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-storage-account-container.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/storage-account-container.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/storage-account-container.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+        storage-account-name: '$(storage-account-name)'
+    - template: devops/pipelines/step/arm-data-lake-store.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/data-lake-store.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/data-lake-store.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-sql-server.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/sql-server.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/sql-server.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-event-hub-namespace.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/event-hub-namespace.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/event-hub-namespace.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-servicebus-namespace.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/servicebus-namespace.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/servicebus-namespace.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-analysis-services.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/analysis-services.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/analysis-services.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-synapse-dw.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/synapse-dw.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/synapse-dw.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-synapse-dw-logic-apps.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/synapse-dw-logic-apps-prd.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/synapse-dw.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-synapse-analytics.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/synapse-analytics.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/synapse-analytics.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-stream-analytics-job.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/stream-analytics-job.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/stream-analytics-job.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-event-hub-hub.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/event-hub-hub.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/event-hub-hub.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-servicebus-topic.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/servicebus-topic.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/servicebus-topic.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-data-factory.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/data-factory.json'
+        armTemplateAlertFile: '$(armTemplateRoot)/data-factory-extensions.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/data-factory.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-sql-managed-instance.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/sql-managed-instance.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/sql-managed-instance.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-logic-app.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/logic-app.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/logic-app.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(resource-group)'
+        ev: '$(ev)'
+    - template: devops/pipelines/step/arm-machine-learning.yml
+      parameters:
+        armTemplateFile: '$(armTemplateRoot)/machine-learning.json'
+        armParameterTemplateFile: '$(armParameterTemplateRoot)/machine-learning.prd.0.parameter.json'
+        location: '$(location)'
+        azureSubscription: '$(azureSubscription)'
+        resourceGroup: '$(mlds-resource-group)'
+        ev: '$(ev)'

@@ -1,0 +1,22 @@
+parameters:
+  armTemplateFile: ''
+  armParameterTemplateFile: ''
+  location: ''
+  ev: ''
+  azureSubscription: ''
+  resourceGroup: ''
+
+steps:
+- task: AzureResourceGroupDeployment@2
+  displayName: 'deploy-synapse-dw-logic-apps'
+  continueOnError: true
+  inputs:
+    azureSubscription: ${{ parameters.azureSubscription }}
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: ${{ parameters.location }}
+    csmFile: '${{ parameters.armTemplateFile }}'
+    csmParametersFile: '${{ parameters.armParameterTemplateFile }}'
+    overrideParameters: '-ResourceGroupName ${{ parameters.resourceGroup }} -Env ${{ parameters.ev }}'
+    deploymentName: 'deployment-synapse-dw-logic-apps'
+    deploymentOutputs: armOutput
+  condition: and(succeeded(), eq(variables['synapse-dw-flag'], '1'))

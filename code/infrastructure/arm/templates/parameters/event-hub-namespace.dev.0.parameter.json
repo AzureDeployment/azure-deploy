@@ -1,0 +1,57 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Owner": {
+            "value": "owner@company.org"
+        },
+        "StartDate": {
+            "value": "10/01/2020"
+        },
+        "ApplicationName": {
+            "value": "ADAP"
+        },
+        "ResourceGroupName": {
+            "value": "rg-yazy-adap-dev-pcus"
+        },
+        "ServiceClass": {
+            "value": "Gold"
+        },
+        "Approver": {
+            "value": "approver@company.org"
+        },
+        "SkuName": {
+            "value": "Basic"
+        },
+        "EndDate": {
+            "value": "01/01/2500"
+        },
+        "DR": {
+            "value": "Mission-Critical"
+        },
+        "Env": {
+            "value": "dev"
+        },
+        "CostCenter": {
+            "value": "8675-309"
+        },
+        "BusinessUnit": {
+            "value": "ADAP"
+        },
+        "EventHubNamespaceName": {
+            "value": "ehns-yazy-adap-dev-pcus"
+        },
+        "SkuCapacity": {
+            "value": "1"
+        },
+        "Requester": {
+            "value": "requester@company.org"
+        },
+        "BudgetAmount": {
+            "value": "$50-Month"
+        },
+        "SkuTier": {
+            "value": "Basic"
+        }
+    }
+}

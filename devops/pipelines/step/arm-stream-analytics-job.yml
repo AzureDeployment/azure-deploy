@@ -1,0 +1,22 @@
+parameters:
+  armTemplateFile: ''
+  armParameterTemplateFile: ''
+  location: ''
+  ev: ''
+  azureSubscription: ''
+  resourceGroup: ''
+
+steps:
+- task: AzureResourceGroupDeployment@2
+  displayName: 'deploy-stream-analytics-job'
+  continueOnError: true
+  inputs:
+    azureSubscription: ${{ parameters.azureSubscription }}
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: ${{ parameters.location }}
+    csmFile: '${{ parameters.armTemplateFile }}'
+    csmParametersFile: '${{ parameters.armParameterTemplateFile }}'
+    overrideParameters: '-ResourceGroupName ${{ parameters.resourceGroup }} -Env ${{ parameters.ev }}'
+    deploymentName: 'deployment-stream-analytics-job'
+    deploymentOutputs: armOutput
+  condition: and(succeeded(), eq(variables['stream-analytics-job-flag'], '1'))
