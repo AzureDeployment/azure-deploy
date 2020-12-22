@@ -59,4 +59,4 @@
     }
  }
 
-Install-VSExtension -extensionUrl "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/GitHub/vsextensions/GitHubExtensionforVisualStudio/2.10.8.8132/vspackage" -extensionFileName "GitHub.VisualStudio-v2.11.106.vsix"
+Install-VSExtension -extensionUrl "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/GitHub/vsextensions/GitHubExtensionforVisualStudio/2.11.106/vspackage" -extensionFileName "GitHub.VisualStudio-v2.11.106.vsix"
