@@ -10,6 +10,7 @@ $Boxstarter.AutoLogin=$true # Save my password securely and auto-login after a r
 
 # Boxstarter (not Chocolatey) commands
 Update-ExecutionPolicy Unrestricted
+
 # Enable-RemoteDesktop  # already enabled on Azure VMs and no thanks for my laptop.
 Disable-InternetExplorerESC  #Turns off IE Enhanced Security Configuration that is on by default on Server OS versions
 Disable-UAC  # until this is over
@@ -26,10 +27,10 @@ try {
 
   mkdir c:\temp -Confirm:0 -ErrorAction Ignore
 
-  $repoCoreDir = "C:\repos"
-  mkdir "$repoCoreDir" -Confirm:0 -ErrorAction Ignore
-  mkdir "$repoCoreDir\github" -Confirm:0 -ErrorAction Ignore
-  mkdir "$repoCoreDir\github\AzureArchitecture" -Confirm:0 -ErrorAction Ignore
+  #$repoCoreDir = "C:\repos"
+  #mkdir "$repoCoreDir" -Confirm:0 -ErrorAction Ignore
+  #mkdir "$repoCoreDir\github" -Confirm:0 -ErrorAction Ignore
+  #mkdir "$repoCoreDir\github\AzureArchitecture" -Confirm:0 -ErrorAction Ignore
 
   $Boxstarter.Log="C:\temp\boxstarter.log"
   $Boxstarter.SuppressLogging=$false
