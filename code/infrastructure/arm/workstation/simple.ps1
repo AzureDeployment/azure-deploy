@@ -21,8 +21,6 @@ Disable-MicrosoftUpdate # until this is over
 Disable-BingSearch # forever
 Enable-RemoteDesktop
 
-Set-ExecutionPolicy Unrestricted
-
 try {
   # https://github.com/chocolatey/choco/issues/52
   choco feature enable allowInsecureConfirmation
