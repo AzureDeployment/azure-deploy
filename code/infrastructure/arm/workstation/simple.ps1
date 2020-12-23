@@ -22,24 +22,24 @@ Disable-BingSearch # forever
 Enable-RemoteDesktop
 
 
-#try {
-#  # https://github.com/chocolatey/choco/issues/52
-#  choco feature enable allowInsecureConfirmation
-#
-#  mkdir c:\temp -Confirm:0 -ErrorAction Ignore
-#
-#  #$repoCoreDir = "C:\repos"
-#  #mkdir "$repoCoreDir" -Confirm:0 -ErrorAction Ignore
-#  #mkdir "$repoCoreDir\github" -Confirm:0 -ErrorAction Ignore
-#  #mkdir "$repoCoreDir\github\AzureArchitecture" -Confirm:0 -ErrorAction Ignore
-#
-#  $Boxstarter.Log="C:\temp\boxstarter.log"
-#  $Boxstarter.SuppressLogging=$false
-#
-#
-#  ######################################################
-#  # settings-system.ps1
-#  ######################################################
+try {
+  # https://github.com/chocolatey/choco/issues/52
+  choco feature enable allowInsecureConfirmation
+
+  mkdir c:\temp -Confirm:0 -ErrorAction Ignore
+
+  #$repoCoreDir = "C:\repos"
+  #mkdir "$repoCoreDir" -Confirm:0 -ErrorAction Ignore
+  #mkdir "$repoCoreDir\github" -Confirm:0 -ErrorAction Ignore
+  #mkdir "$repoCoreDir\github\AzureArchitecture" -Confirm:0 -ErrorAction Ignore
+
+  $Boxstarter.Log="C:\temp\boxstarter.log"
+  $Boxstarter.SuppressLogging=$false
+
+
+  ######################################################
+  # settings-system.ps1
+  ######################################################
 #  #--- Enable developer mode on the system ---
 #  Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\AppModelUnlock -Name AllowDevelopmentWithoutDevLicense -Value 1
 #
@@ -188,10 +188,10 @@ Enable-RemoteDesktop
 #  Install-WindowsUpdate -AcceptEula -GetUpdatesFromMS
 #
 #  Read-Host "Restart required for some modifications to take effect. Please reboot."
-#}
-#catch {
-#  throw $_
-#}
+}
+catch {
+  throw $_
+}
 
 
 #
