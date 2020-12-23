@@ -20,10 +20,14 @@ disable-computerrestore -drive "C:\"  # http://ss64.com/ps/disable-computerresto
 Disable-MicrosoftUpdate # until this is over
 Disable-BingSearch # forever
 Enable-RemoteDesktop
-
-choco feature enable allowInsecureConfirmation
-choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
-
+try
+{
+	choco feature enable allowInsecureConfirmation
+	choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+}
+catch {
+  throw $_
+}
 #try {
 #  # https://github.com/chocolatey/choco/issues/52
 #  choco feature enable allowInsecureConfirmation
