@@ -22,7 +22,7 @@ Disable-BingSearch # forever
 Enable-RemoteDesktop
 
 choco feature enable allowInsecureConfirmation
-#choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
 
 #try {
 #  # https://github.com/chocolatey/choco/issues/52
