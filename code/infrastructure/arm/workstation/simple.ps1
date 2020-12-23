@@ -21,28 +21,31 @@ Disable-MicrosoftUpdate # until this is over
 Disable-BingSearch # forever
 Enable-RemoteDesktop
 
-try {
-  # https://github.com/chocolatey/choco/issues/52
-  choco feature enable allowInsecureConfirmation
+choco feature enable allowInsecureConfirmation
+choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
 
-  mkdir c:\temp -Confirm:0 -ErrorAction Ignore
-
-  #$repoCoreDir = "C:\repos"
-  #mkdir "$repoCoreDir" -Confirm:0 -ErrorAction Ignore
-  #mkdir "$repoCoreDir\github" -Confirm:0 -ErrorAction Ignore
-  #mkdir "$repoCoreDir\github\AzureArchitecture" -Confirm:0 -ErrorAction Ignore
-
-  $Boxstarter.Log="C:\temp\boxstarter.log"
-  $Boxstarter.SuppressLogging=$false
-
-
-  ######################################################
-  # settings-system.ps1
-  ######################################################
-  #--- Enable developer mode on the system ---
-  #Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\AppModelUnlock -Name AllowDevelopmentWithoutDevLicense  -Type DWord -Value 1
-
-
+#try {
+#  # https://github.com/chocolatey/choco/issues/52
+#  choco feature enable allowInsecureConfirmation
+#
+#  mkdir c:\temp -Confirm:0 -ErrorAction Ignore
+#
+#  #$repoCoreDir = "C:\repos"
+#  #mkdir "$repoCoreDir" -Confirm:0 -ErrorAction Ignore
+#  #mkdir "$repoCoreDir\github" -Confirm:0 -ErrorAction Ignore
+#  #mkdir "$repoCoreDir\github\AzureArchitecture" -Confirm:0 -ErrorAction Ignore
+#
+#  $Boxstarter.Log="C:\temp\boxstarter.log"
+#  $Boxstarter.SuppressLogging=$false
+#
+#
+#  ######################################################
+#  # settings-system.ps1
+#  ######################################################
+#  #--- Enable developer mode on the system ---
+#  #Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\AppModelUnlock -Name AllowDevelopmentWithoutDevLicense  -Type DWord -Value 1
+#
+#
 # Write-Output "Modifying Explorer options"
 # Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar
 # 
@@ -97,7 +100,7 @@ try {
 #  # Installing Dev Tools
 #  ######################################################
 #  Write-Host "Installing Dev Tools"
-   choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+#  choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
 #  choco install git.install -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache"  --force --log-file=$Boxstarter.Log
 #  choco install visualstudio2019community --All -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
 #  choco install visualstudio2019-workload-azure --All -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
@@ -187,10 +190,10 @@ try {
 #  Install-WindowsUpdate -AcceptEula -GetUpdatesFromMS
 #
 #  Read-Host "Restart required for some modifications to take effect. Please reboot."
-}
-catch {
-  throw $_
-}
+#}
+#catch {
+#  throw $_
+#}
 
 
 #
