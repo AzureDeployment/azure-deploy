@@ -22,8 +22,42 @@ Disable-BingSearch # forever
 Enable-RemoteDesktop
 try
 {
+	Write-Host
 	choco feature enable allowInsecureConfirmation
 	choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install git.install -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache"  --force --log-file=$Boxstarter.Log
+	choco install visualstudio2019community --All -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install visualstudio2019-workload-azure --All -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install azure-cli -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install microsoftazurestorageexplorer -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install vscode -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install sql-server-management-studio -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install ssis-vs2019 -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install azure-data-studio -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install azuredatastudio-powershell -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install github-desktop -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install adobereader -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install office365proplus -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install git-credential-manager-for-windows -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install gitextensions -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install vscode-powershell -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install vscode-mssql -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+
+	choco install azure-functions-core-tools -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install azure-data-studio-sql-server-admin-pack -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install vscode-azurerm-tools -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install azcopy10 -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install vscode-vsonline -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install azure-pipelines-agent -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install markdownmonster -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install vscode-azurerepos -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install opencommandline -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install codemaid -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install stylecop -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+
+	choco install sourcetree -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	choco install 7zip.install -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+	Write-Host
 }
 catch {
   throw $_
