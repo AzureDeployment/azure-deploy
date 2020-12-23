@@ -44,8 +44,8 @@ try {
   #Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\AppModelUnlock -Name AllowDevelopmentWithoutDevLicense  -Type DWord -Value 1
 
 
-  Write-Output "Modifying Explorer options"
-  Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar
+# Write-Output "Modifying Explorer options"
+# Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar
 # 
 #  Write-Output "Modifying taskbar options"
 #  Set-BoxstarterTaskbarOptions -Dock Bottom -Combine Always -AlwaysShowIconsOn
@@ -98,7 +98,7 @@ try {
 #  # Installing Dev Tools
 #  ######################################################
 #  Write-Host "Installing Dev Tools"
-#  choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
+   choco install googlechrome -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
 #  choco install git.install -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache"  --force --log-file=$Boxstarter.Log
 #  choco install visualstudio2019community --All -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
 #  choco install visualstudio2019-workload-azure --All -y --cacheLocation "$env:UserProfile\AppData\Local\ChocoCache" --force --log-file=$Boxstarter.Log
